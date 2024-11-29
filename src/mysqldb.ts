@@ -1,11 +1,19 @@
-import mysqldb from 'mysql2';
+import mysql from 'mysql2/promise';
 
-const connection = mysqldb.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: 'root',
-  database: 'Modas',
-  dateStrings: true,
-});
+const createConnection = async () => {
+  try {
+    const conn = await mysql.createConnection({
+      host: '127.0.0.1',
+      user: 'root',
+      password: 'root',
+      database: 'Modas',
+      dateStrings: true,
+    });
+    return conn;
+  } catch (error) {
+    console.error('MySQL 연결 실패:', error);
+    throw error;
+  }
+};
 
-module.exports = connection;
+export default createConnection;
