@@ -1,6 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import userRouter from './user/user.route';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const port = 8000;
