@@ -6,10 +6,10 @@ import jwt from 'jsonwebtoken';
 
 const privateKey = process.env.PRIVATE_KEY || 'default-secret-key';
 
-export const join = async (req: Request, res: Response) => {
+export const checkedEmail = async (req: Request, res: Response) => {
   const conn = await createConnection();
 
-  const { email, nickName, password } = req.body;
+  const { email } = req.body;
 
   const emailCheckQuery = `SELECT * FROM users WHERE email = ?`;
   const [emailUser] = await conn.query<RowDataPacket[]>(emailCheckQuery, [email]);
@@ -19,12 +19,30 @@ export const join = async (req: Request, res: Response) => {
     return;
   }
 
+  res.status(200).send({ success: true });
+  return;
+};
+
+export const checkedNickName = async (req: Request, res: Response) => {
+  const conn = await createConnection();
+
+  const { nickName } = req.body;
+
   const nickNameCheckQuery = `SELECT * FROM users WHERE nickName = ?`;
   const [nickNameUser] = await conn.query<RowDataPacket[]>(nickNameCheckQuery, [nickName]);
   if (nickNameUser[0]) {
     res.status(400).send({ message: '닉네임이 중복됩니다.' });
     return;
   }
+
+  res.status(200).send({ success: true });
+  return;
+};
+
+export const join = async (req: Request, res: Response) => {
+  const conn = await createConnection();
+
+  const { email, nickName, password } = req.body;
 
   // 비밀번호 해싱
   const salt = await bcrypt.genSalt();
